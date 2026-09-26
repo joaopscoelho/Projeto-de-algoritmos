@@ -1,0 +1,64 @@
+\qquad As Tabelas \ref{tab:comparacao_crescente}, \ref{tab:comparacao_decrescente}
+e \ref{tab:comparacao_random} apresentam, lado a lado, os tempos de
+execução (em segundos) obtidos pelos quatro algoritmos estudados neste
+trabalho, para os seis tamanhos de instância exigidos, uma tabela para
+cada um dos três tipos de entrada testados (Crescente, Decrescente e
+Random).
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|l|r|r|r|r|r|r|}
+        \hline
+         & 10 & 100 & 1.000 & 10.000 & 100.000 & 1.000.000 \\
+        \hline
+        Insertion Sort & 0,000001 & 0,000002 & 0,000002 & 0,000016 & 0,000094 & 0,001015 \\
+        \hline
+        Selection Sort & 0,000001 & 0,000008 & 0,001218 & 0,125560 & 12,468661 & 323,090207 \\
+        \hline
+        Bubble Sort & 0,000001 & 0,000000 & 0,000001 & 0,000007 & 0,000091 & 0,001795 \\
+        \hline
+        Shell Sort & 0,000001 & 0,000001 & 0,000012 & 0,000081 & 0,001082 & 0,017349 \\
+        \hline
+    \end{tabular}
+    \caption{Tempo de execução (em segundos) dos 4 algoritmos -- entrada Crescente}
+    \label{tab:comparacao_crescente}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|l|r|r|r|r|r|r|}
+        \hline
+         & 10 & 100 & 1.000 & 10.000 & 100.000 & 1.000.000 \\
+        \hline
+        Insertion Sort & 0,000002 & 0,000003 & 0,000146 & 0,013730 & 1,378020 & 139,297525 \\
+        \hline
+        Selection Sort & 0,000001 & 0,000010 & 0,001194 & 0,122701 & 12,588413 & 306,210246 \\
+        \hline
+        Bubble Sort & 0,000000 & 0,000031 & 0,003800 & 0,320914 & 33,378878 & 3329,210083 \\
+        \hline
+        Shell Sort & 0,000001 & 0,000002 & 0,000012 & 0,000134 & 0,001697 & 0,023871 \\
+        \hline
+    \end{tabular}
+    \caption{Tempo de execução (em segundos) dos 4 algoritmos -- entrada Decrescente}
+    \label{tab:comparacao_decrescente}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|l|r|r|r|r|r|r|}
+        \hline
+         & 10 & 100 & 1.000 & 10.000 & 100.000 & 1.000.000 \\
+        \hline
+        Insertion Sort & 0,000001 & 0,000003 & 0,000076 & 0,007502 & 0,689424 & 69,702984 \\
+        \hline
+        Selection Sort & 0,000001 & 0,000013 & 0,001230 & 0,116897 & 12,419415 & 321,875258 \\
+        \hline
+        Bubble Sort & 0,000001 & 0,000022 & 0,002098 & 0,179071 & 27,737162 & - \\
+        \hline
+        Shell Sort & 0,000001 & 0,000003 & 0,000066 & 0,000821 & 0,011081 & 0,169964 \\
+        \hline
+    \end{tabular}
+    \caption{Tempo de execução (em segundos) dos 4 algoritmos -- entrada Random}
+    \label{tab:comparacao_random}
+\end{table}
+

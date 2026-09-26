@@ -1,0 +1,42 @@
+\qquad A seguir apresenta-se a função responsável por orquestrar, para
+cada instância, a geração do vetor, a execução do algoritmo de
+ordenação selecionado (recebido como um ponteiro de função, o que
+permite reutilizar a mesma rotina para os quatro algoritmos deste
+trabalho) com a respectiva medição de tempo, e o registro dos
+arquivos de entrada, saída e tempo dentro da pasta correspondente ao
+algoritmo — pasta essa que também é criada automaticamente pelo
+próprio programa, caso ainda não exista (arquivos
+\texttt{base.h} e \texttt{main.cpp}):
+
+\begin{verbatim}
+void criarEstruturaPastas(const string &algoritmo) {
+    const string grupos[3] = {"Arquivos de Entrada", "Arquivos de Saida",
+                               "Arquivos de Tempo"};
+    const string categorias[3] = {"Crescente", "Decrescente", "Random"};
+    for (const string &grupo : grupos)
+        for (const string &categoria : categorias)
+            fs::create_directories(algoritmo + "/" + grupo + "/" + categoria);
+}
+
+void operacoes(const string &algoritmo, FuncaoOrdenacao funcao,
+               int tipo, int tamanho) {
+    criarEstruturaPastas(algoritmo);
+
+    clock_t start_t, end_t;
+    double tempoGasto;
+
+    int *vetor = gerarSequencia(tipo, tamanho);
+    salvarEntrada(algoritmo, tipo, tamanho, vetor);
+
+    start_t = clock();
+    funcao(vetor, tamanho);
+    end_t = clock();
+
+    tempoGasto = (end_t - start_t) / (double)CLOCKS_PER_SEC;
+
+    salvarTempo(algoritmo, tipo, tamanho, tempoGasto);
+    salvarSaida(algoritmo, tipo, tamanho, vetor);
+
+    delete[] vetor;
+}
+\end{verbatim}
