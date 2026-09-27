@@ -14,10 +14,10 @@ typedef void (*FuncaoOrdenacao)(int*, int);
 // Os 4 algoritmos do trabalho, na ordem sugerida pelo enunciado.
 const string NOMES_ALGORITMOS[4] = {"Insertion Sort", "Selection Sort", "Shell Sort", "Bubble Sort"};
 const FuncaoOrdenacao FUNCOES_ALGORITMOS[4] = {
-    InsertionSort_versao1,
-    SelectionSort_versao1,
-    ShellSort_versao1,
-    BubbleSort_versao1
+    InsertionSort,
+    SelectionSort,
+    ShellSort,
+    BubbleSort
 };
 
 const int TAMANHOS[6] = {10, 100, 1000, 10000, 100000, 1000000};
