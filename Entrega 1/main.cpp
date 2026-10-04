@@ -1,3 +1,10 @@
+// O Visual Studio trata fopen() como "inseguro" e interrompe a compilacao;
+// este define precisa vir ANTES de qualquer #include (nos demais compiladores
+// nao tem efeito).
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -35,8 +42,11 @@ int main() {
         switch (opcao) {
             case 1:
                 cout << "Executando Insertion Sort para o tipo " << nomeCategoria(tipoAtual) << "..." << endl;
-                executarTodosOsTamanhos(tipoAtual);
-                cout << "Execucao concluida. Arquivos de entrada, saida e tempo atualizados." << endl;
+                if (executarTodosOsTamanhos(tipoAtual)) {
+                    cout << "Execucao concluida. Arquivos de entrada, saida e tempo atualizados." << endl;
+                } else {
+                    cout << "Execucao interrompida por erro (veja a mensagem acima)." << endl;
+                }
                 break;
             case 2:
                 tipoAtual = menuTipo();
