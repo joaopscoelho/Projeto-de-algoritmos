@@ -1,23 +1,8 @@
 A Tabela \ref{tab:tempos_bubble} apresenta os tempos de execução, em segundos, obtidos para o Bubble Sort nos seis tamanhos de instância exigidos pelo trabalho, para cada um dos três tipos de entrada testados.
 
-\begin{table}[htbp]
-    \centering
-    \begin{tabular}{|l|r|r|r|r|r|r|}
-        \hline
-         & 10 & 100 & 1.000 & 10.000 & 100.000 & 1.000.000 \\
-        \hline
-        Crescente & 0,000001 & 0,000000 & 0,000001 & 0,000007 & 0,000091 & 0,001795 \\
-        \hline
-        Decrescente & 0,000000 & 0,000031 & 0,003800 & 0,320914 & 33,378878 & 3329,210083 \\
-        \hline
-        Random & 0,000001 & 0,000022 & 0,002098 & 0,179071 & 27,737162 & - \\
-        \hline
-    \end{tabular}
-    \caption{Tempo de execução (em segundos) do Bubble Sort por tamanho e tipo de instância}
-    \label{tab:tempos_bubble}
-\end{table}
+\input{Tabelas/tab_bubble_sort}
 
-O Gráfico \ref{fig:grafico_bubble} apresenta esses mesmos dados em escala linear. Assim como no Insertion Sort, a entrada crescente permanece praticamente em zero em todos os tamanhos (graças à parada antecipada do algoritmo), enquanto as entradas decrescente e randômica crescem de forma acentuada a partir de 10.000 elementos.
+O Gráfico \ref{fig:grafico_bubble} apresenta esses mesmos dados em escala linear. Assim como no Insertion Sort, a entrada crescente permanece praticamente em zero em todos os tamanhos (graças à parada antecipada do algoritmo), enquanto as entradas decrescente e randômica crescem de forma acentuada a partir de 100.000 elementos. Diferentemente do Insertion Sort, porém, aqui a entrada randômica é a mais lenta das três: para 1.000.000 de elementos, 938,7 s, contra 155,6 s da entrada decrescente.
 
 \begin{figure}[htbp]
     \centering
@@ -26,7 +11,7 @@ O Gráfico \ref{fig:grafico_bubble} apresenta esses mesmos dados em escala linea
     \label{fig:grafico_bubble}
 \end{figure}
 
-O Gráfico \ref{fig:grafico_bubble_log} em escala logarítmica confirma o comportamento linear da entrada crescente e o comportamento quadrático das entradas decrescente e randômica. Comparando com o Insertion Sort (Capítulo 1), nota-se que o Bubble Sort é consistentemente mais lento nos casos decrescente e randômico, apesar de ambos terem a mesma ordem de grandeza de comparações -- diferença explicada pelo maior custo de cada troca do Bubble Sort (três atribuições) em comparação com o deslocamento do Insertion Sort (uma atribuição), como discutido na análise de complexidade.
+O Gráfico \ref{fig:grafico_bubble_log} em escala logarítmica confirma o comportamento linear da entrada crescente e o comportamento quadrático das entradas decrescente e randômica. O tempo de 0,000000 s medido para 1.000 elementos na entrada crescente (abaixo da resolução do relógio, de cerca de 1 $\mu$s) não pode ser representado em escala logarítmica, e por isso a curva da entrada crescente apresenta uma interrupção nesse ponto.
 
 \begin{figure}[htbp]
     \centering
@@ -34,3 +19,5 @@ O Gráfico \ref{fig:grafico_bubble_log} em escala logarítmica confirma o compor
     \caption{Gráfico de tempo por tamanho do algoritmo Bubble Sort (escala logarítmica)}
     \label{fig:grafico_bubble_log}
 \end{figure}
+
+Comparando com o Insertion Sort (Capítulo 1), nota-se que, na entrada decrescente, os dois algoritmos tiveram desempenho equivalente (155,6 s para o Bubble Sort contra 167,0 s para o Insertion Sort, para 1.000.000 de elementos), enquanto na entrada randômica o Bubble Sort foi cerca de 11,6 vezes mais lento (938,7 s contra 80,6 s). Parte dessa diferença é explicada pelo número de comparações: em uma entrada aleatória o Bubble Sort realiza cerca de $n(n-1)/2$ comparações, o dobro das cerca de $n(n-1)/4$ do Insertion Sort. A diferença restante provavelmente decorre de efeitos de hardware, discutidos na análise de complexidade deste capítulo, que a simples contagem de operações não captura.

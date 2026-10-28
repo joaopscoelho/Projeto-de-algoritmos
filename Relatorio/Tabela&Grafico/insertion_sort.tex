@@ -3,22 +3,7 @@ em segundos, obtidos para o Insertion Sort nos seis tamanhos de
 instância exigidos pelo trabalho, para cada um dos três tipos de
 entrada testados.
 
-\begin{table}[htbp]
-    \centering
-    \begin{tabular}{|l|r|r|r|r|r|r|}
-        \hline
-         & 10 & 100 & 1.000 & 10.000 & 100.000 & 1.000.000 \\
-        \hline
-        Crescente & 0,000001 & 0,000002 & 0,000002 & 0,000016 & 0,000094 & 0,001015 \\
-        \hline
-        Decrescente & 0,000002 & 0,000003 & 0,000146 & 0,013730 & 1,378020 & 139,297525 \\
-        \hline
-        Random & 0,000001 & 0,000003 & 0,000076 & 0,007502 & 0,689424 & 69,702984 \\
-        \hline
-    \end{tabular}
-    \caption{Tempo de execução (em segundos) do Insertion Sort por tamanho e tipo de instância}
-    \label{tab:tempos_insertion}
-\end{table}
+\input{Tabelas/tab_insertion_sort}
 
 \qquad O Gráfico \ref{fig:grafico_insert} apresenta esses mesmos dados em
 escala linear. Nele fica evidente que, para tamanhos de até 10.000
@@ -51,13 +36,15 @@ os menores.
 
 \qquad Analisando os resultados, observa-se que a entrada crescente
 apresenta desempenho linear: mesmo para 1.000.000 de elementos, o
-tempo de execução foi de apenas cerca de 0,001 segundo, já que o
-laço interno de deslocamento praticamente não é executado quando o
-vetor já está ordenado. Já a entrada decrescente, que representa o
-pior caso do algoritmo, teve o tempo de execução crescendo de forma
-quadrática, chegando a aproximadamente 139,3 segundos para 1.000.000
-de elementos. A entrada randômica, representando o caso médio,
-também cresceu de forma quadrática, porém com tempo de execução
-próximo à metade do pior caso (cerca de 69,7 segundos para 1.000.000
-de elementos), o que é compatível com o número esperado de
-comparações e deslocamentos em uma entrada aleatória.
+tempo de execução foi inferior a um milésimo de segundo (cerca de
+0,0006 segundo), já que o laço interno de deslocamento praticamente
+não é executado quando o vetor já está ordenado. Já a entrada
+decrescente, que representa o pior caso do algoritmo, teve o tempo de
+execução crescendo de forma quadrática, chegando a aproximadamente
+167,0 segundos para 1.000.000 de elementos. A entrada randômica,
+representando o caso médio, também cresceu de forma quadrática, porém
+com tempo de execução um pouco inferior à metade do pior caso (cerca
+de 80,6 segundos para 1.000.000 de elementos, ou 48\% do tempo da
+entrada decrescente), o que é compatível com o número esperado de
+comparações e deslocamentos em uma entrada aleatória, que é metade do
+observado no pior caso.

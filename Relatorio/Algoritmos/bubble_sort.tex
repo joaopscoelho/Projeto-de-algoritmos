@@ -18,10 +18,10 @@ torna o comportamento do algoritmo linear quando a entrada já está
 ordenada.
 
 \qquad A seguir apresenta-se a implementação utilizada neste trabalho, em
-C++, correspondente à função \texttt{BubbleSort\_versao1}:
+C++, correspondente à função \texttt{BubbleSort}:
 
 \begin{verbatim}
-void BubbleSort_versao1(int *vetor, int tamanho) {
+void BubbleSort(int *vetor, int tamanho) {
     int aux;
     bool trocou;
     for (int i = 0; i < tamanho - 1; i++) {
@@ -45,22 +45,16 @@ cenário graças à parada antecipada. Por outro lado, em entradas
 decrescentes ou aleatórias, o algoritmo realiza um número de
 comparações da mesma ordem de grandeza do Insertion Sort, porém com um
 custo maior por troca (três atribuições contra uma no deslocamento do
-Insertion Sort), o que costuma torná-lo mais lento na prática, como
-discutido na análise de complexidade e evidenciado nos resultados
-experimentais deste capítulo.
+Insertion Sort), o que tende a torná-lo mais lento na prática, efeito que os resultados experimentais deste capítulo mostram com clareza no caso de entradas aleatórias, como discutido na análise de complexidade.
 
 \subsection{Teste de Mesa Manual}
 
-\qquad Nesta seção deve ser inserida a digitalização do teste de mesa
-manual do Bubble Sort, realizado à mão com um exemplo de entrada
-diferente dos exemplos trabalhados em sala de aula, conforme exigido
-pelo enunciado do trabalho. Substitua a imagem de exemplo abaixo pela
-digitalização (foto ou escaneamento) do teste de mesa manuscrito.
+\qquad O teste de mesa manual do Bubble Sort, apresentado na figura abaixo, foi realizado à mão com um exemplo de entrada diferente dos exemplos trabalhados em sala de aula, conforme exigido pelo enunciado do trabalho.
 
 \begin{figure}[htbp]
     \centering
     % Substitua o arquivo abaixo pela digitalizacao do teste de mesa manuscrito
-    \includegraphics[width=14cm]{Imagens/Bubble Sort/teste_de_mesa.png}
+    \includegraphics[width=14cm]{Imagens/Bubble Sort/teste_de_mesa.jpeg}
     \caption{Teste de mesa manual do algoritmo Bubble Sort}
     \label{fig:teste_mesa_bubble}
 \end{figure}

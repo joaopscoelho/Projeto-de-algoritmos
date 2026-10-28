@@ -16,10 +16,10 @@ a lógica do Insertion Sort a cada um dos subvetores formados por
 elementos espaçados de \textit{gap} posições entre si.
 
 \qquad A seguir apresenta-se a implementação utilizada neste trabalho, em
-C++, correspondente à função \texttt{ShellSort\_versao1}:
+C++, correspondente à função \texttt{ShellSort}:
 
 \begin{verbatim}
-void ShellSort_versao1(int *vetor, int tamanho) {
+void ShellSort(int *vetor, int tamanho) {
     int chave, j;
     for (int gap = tamanho / 2; gap > 0; gap /= 2) {
         for (int i = gap; i < tamanho; i++) {
@@ -46,16 +46,27 @@ Sort na prática, para todos os tipos de entrada testados.
 
 \subsection{Teste de Mesa Manual}
 
-\qquad Nesta seção deve ser inserida a digitalização do teste de mesa
-manual do Shell Sort, realizado à mão com um exemplo de entrada
-diferente dos exemplos trabalhados em sala de aula, conforme exigido
-pelo enunciado do trabalho. Substitua a imagem de exemplo abaixo pela
-digitalização (foto ou escaneamento) do teste de mesa manuscrito.
+\qquad O teste de mesa manual do Shell Sort, apresentado na figura abaixo, foi realizado à mão com um exemplo de entrada diferente dos exemplos trabalhados em sala de aula, conforme exigido pelo enunciado do trabalho.
+Devido ao maior número de passadas do Shell Sort (uma para cada
+intervalo utilizado na execução), o teste de mesa não coube em uma
+única folha e está dividido em duas partes: a primeira contempla as
+passadas com os intervalos gap = 4 e gap = 2, e a segunda contempla a
+passada final, com gap = 1.
 
 \begin{figure}[htbp]
     \centering
-    % Substitua o arquivo abaixo pela digitalizacao do teste de mesa manuscrito
-    \includegraphics[width=14cm]{Imagens/Shell Sort/teste_de_mesa.png}
-    \caption{Teste de mesa manual do algoritmo Shell Sort}
-    \label{fig:teste_mesa_shell}
+    % Substitua o arquivo abaixo pela digitalizacao do teste de mesa manuscrito (parte 1)
+    \includegraphics[width=14cm]{Imagens/Shell Sort/teste_de_mesa_parte_1.jpeg}
+    \caption{Teste de mesa manual do algoritmo Shell Sort -- parte 1 de 2 (passadas com gap = 4 e gap = 2)}
+    \label{fig:teste_mesa_shell_1}
+\end{figure}
+
+\newpage
+
+\begin{figure}[htbp]
+    \centering
+    % Substitua o arquivo abaixo pela digitalizacao do teste de mesa manuscrito (parte 2)
+    \includegraphics[width=14cm]{Imagens/Shell Sort/teste_de_mesa_parte_2.jpeg}
+    \caption{Teste de mesa manual do algoritmo Shell Sort -- parte 2 de 2 (passada com gap = 1)}
+    \label{fig:teste_mesa_shell_2}
 \end{figure}

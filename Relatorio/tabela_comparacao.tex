@@ -1,64 +1,26 @@
 \qquad As Tabelas \ref{tab:comparacao_crescente}, \ref{tab:comparacao_decrescente}
 e \ref{tab:comparacao_random} apresentam, lado a lado, os tempos de
-execução (em segundos) obtidos pelos quatro algoritmos estudados neste
+execução (em segundos) obtidos pelos cinco algoritmos estudados neste
 trabalho, para os seis tamanhos de instância exigidos, uma tabela para
 cada um dos três tipos de entrada testados (Crescente, Decrescente e
-Random).
+Random). Todos os valores são os registrados nos arquivos de tempo
+gerados pelo programa para cada algoritmo.
 
-\begin{table}[htbp]
-    \centering
-    \begin{tabular}{|l|r|r|r|r|r|r|}
-        \hline
-         & 10 & 100 & 1.000 & 10.000 & 100.000 & 1.000.000 \\
-        \hline
-        Insertion Sort & 0,000001 & 0,000002 & 0,000002 & 0,000016 & 0,000094 & 0,001015 \\
-        \hline
-        Selection Sort & 0,000001 & 0,000008 & 0,001218 & 0,125560 & 12,468661 & 323,090207 \\
-        \hline
-        Bubble Sort & 0,000001 & 0,000000 & 0,000001 & 0,000007 & 0,000091 & 0,001795 \\
-        \hline
-        Shell Sort & 0,000001 & 0,000001 & 0,000012 & 0,000081 & 0,001082 & 0,017349 \\
-        \hline
-    \end{tabular}
-    \caption{Tempo de execução (em segundos) dos 4 algoritmos -- entrada Crescente}
-    \label{tab:comparacao_crescente}
-\end{table}
+\input{Tabelas/comparacao_crescente}
 
-\begin{table}[htbp]
-    \centering
-    \begin{tabular}{|l|r|r|r|r|r|r|}
-        \hline
-         & 10 & 100 & 1.000 & 10.000 & 100.000 & 1.000.000 \\
-        \hline
-        Insertion Sort & 0,000002 & 0,000003 & 0,000146 & 0,013730 & 1,378020 & 139,297525 \\
-        \hline
-        Selection Sort & 0,000001 & 0,000010 & 0,001194 & 0,122701 & 12,588413 & 306,210246 \\
-        \hline
-        Bubble Sort & 0,000000 & 0,000031 & 0,003800 & 0,320914 & 33,378878 & 3329,210083 \\
-        \hline
-        Shell Sort & 0,000001 & 0,000002 & 0,000012 & 0,000134 & 0,001697 & 0,023871 \\
-        \hline
-    \end{tabular}
-    \caption{Tempo de execução (em segundos) dos 4 algoritmos -- entrada Decrescente}
-    \label{tab:comparacao_decrescente}
-\end{table}
+\input{Tabelas/comparacao_decrescente}
 
-\begin{table}[htbp]
-    \centering
-    \begin{tabular}{|l|r|r|r|r|r|r|}
-        \hline
-         & 10 & 100 & 1.000 & 10.000 & 100.000 & 1.000.000 \\
-        \hline
-        Insertion Sort & 0,000001 & 0,000003 & 0,000076 & 0,007502 & 0,689424 & 69,702984 \\
-        \hline
-        Selection Sort & 0,000001 & 0,000013 & 0,001230 & 0,116897 & 12,419415 & 321,875258 \\
-        \hline
-        Bubble Sort & 0,000001 & 0,000022 & 0,002098 & 0,179071 & 27,737162 & - \\
-        \hline
-        Shell Sort & 0,000001 & 0,000003 & 0,000066 & 0,000821 & 0,011081 & 0,169964 \\
-        \hline
-    \end{tabular}
-    \caption{Tempo de execução (em segundos) dos 4 algoritmos -- entrada Random}
-    \label{tab:comparacao_random}
-\end{table}
+\input{Tabelas/comparacao_random}
 
+\qquad Para 1.000.000 de elementos, os destaques de cada tabela são:
+na entrada crescente, o Bubble Sort (0,000321 s) e o Insertion Sort
+(0,000584 s) foram os mais rápidos, por serem lineares nesse cenário,
+seguidos pelo Shell Sort (0,008251 s) e pelo Merge Sort (0,021293 s),
+enquanto o Selection Sort levou 934,9 s; na entrada decrescente, o Shell
+Sort (0,011790 s) e o Merge Sort (0,020753 s) ficaram quatro ordens de
+grandeza abaixo dos algoritmos quadráticos, entre os quais Bubble Sort
+(155,6 s) e Insertion Sort (167,0 s) tiveram desempenho equivalente e o
+Selection Sort foi o mais lento (937,3 s); na entrada randômica, o
+Merge Sort foi o mais rápido (0,077718 s), seguido pelo Shell Sort
+(0,106033 s), muito à frente do Insertion Sort (80,6 s), do Selection
+Sort (932,5 s) e do Bubble Sort (938,7 s).

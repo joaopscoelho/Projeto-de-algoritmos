@@ -1,32 +1,65 @@
 \qquad A seguir apresenta-se a função responsável por orquestrar, para
 cada instância, a geração do vetor, a execução do algoritmo de
 ordenação selecionado (recebido como um ponteiro de função, o que
-permite reutilizar a mesma rotina para os quatro algoritmos deste
+permite reutilizar a mesma rotina para os cinco algoritmos deste
 trabalho) com a respectiva medição de tempo, e o registro dos
 arquivos de entrada, saída e tempo dentro da pasta correspondente ao
-algoritmo — pasta essa que também é criada automaticamente pelo
+algoritmo --- pasta essa que também é criada automaticamente pelo
 próprio programa, caso ainda não exista (arquivos
-\texttt{base.h} e \texttt{main.cpp}):
+\texttt{algoritmos.h} e \texttt{main.cpp}). Por brevidade, foram omitidas
+as mensagens de erro exibidas quando alguma pasta ou arquivo não pode
+ser criado. No caso do Merge Sort, o tempo medido inclui a alocação do
+vetor auxiliar, por ela fazer parte do algoritmo.
 
+{\small
 \begin{verbatim}
-void criarEstruturaPastas(const string &algoritmo) {
-    const string grupos[3] = {"Arquivos de Entrada", "Arquivos de Saida",
-                               "Arquivos de Tempo"};
-    const string categorias[3] = {"Crescente", "Decrescente", "Random"};
-    for (const string &grupo : grupos)
-        for (const string &categoria : categorias)
-            fs::create_directories(algoritmo + "/" + grupo + "/" + categoria);
+bool criarPasta(const string &caminho) {
+#if defined(_WIN32)
+    int resultado = _mkdir(caminho.c_str());
+#else
+    int resultado = mkdir(caminho.c_str(), 0777);
+#endif
+    return resultado == 0 || errno == EEXIST;
 }
 
-void operacoes(const string &algoritmo, FuncaoOrdenacao funcao,
+bool criarPastas(const string &caminho) {
+    for (size_t i = 0; i <= caminho.size(); i++) {
+        if (i == caminho.size() || caminho[i] == '/') {
+            if (i > 0 && !criarPasta(caminho.substr(0, i)))
+                return false;
+        }
+    }
+    return true;
+}
+
+bool criarEstruturaPastas(const string &algoritmo) {
+    const char *grupos[3] = {"Arquivos de Entrada",
+                             "Arquivos de Saida",
+                             "Arquivos de Tempo"};
+    const char *categorias[3] = {"Crescente", "Decrescente", "Random"};
+    for (int g = 0; g < 3; g++) {
+        for (int c = 0; c < 3; c++) {
+            string caminho = algoritmo + "/" + grupos[g] +
+                             "/" + categorias[c];
+            if (!criarPastas(caminho)) return false;
+        }
+    }
+    return true;
+}
+
+bool operacoes(const string &algoritmo, FuncaoOrdenacao funcao,
                int tipo, int tamanho) {
-    criarEstruturaPastas(algoritmo);
+    if (!criarEstruturaPastas(algoritmo)) return false;
 
     clock_t start_t, end_t;
     double tempoGasto;
 
     int *vetor = gerarSequencia(tipo, tamanho);
-    salvarEntrada(algoritmo, tipo, tamanho, vetor);
+
+    if (!salvarEntrada(algoritmo, tipo, tamanho, vetor)) {
+        delete[] vetor;
+        return false;
+    }
 
     start_t = clock();
     funcao(vetor, tamanho);
@@ -34,9 +67,11 @@ void operacoes(const string &algoritmo, FuncaoOrdenacao funcao,
 
     tempoGasto = (end_t - start_t) / (double)CLOCKS_PER_SEC;
 
-    salvarTempo(algoritmo, tipo, tamanho, tempoGasto);
-    salvarSaida(algoritmo, tipo, tamanho, vetor);
+    bool gravou = salvarTempo(algoritmo, tipo, tamanho, tempoGasto) &&
+                  salvarSaida(algoritmo, tipo, tamanho, vetor);
 
     delete[] vetor;
+    return gravou;
 }
 \end{verbatim}
+}

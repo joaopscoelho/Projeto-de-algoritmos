@@ -1,52 +1,84 @@
 \qquad A partir da implementação e dos experimentos realizados com os
-quatro algoritmos, foi possível observar, na prática, diferenças de
-comportamento que confirmam a análise teórica de cada um.
+cinco algoritmos, foi possível observar, na prática, diferenças de
+comportamento que confirmam a análise teórica de cada um. Os tempos
+citados a seguir referem-se a instâncias de 1.000.000 de elementos.
 
 \qquad O \textbf{Insertion Sort} e o \textbf{Bubble Sort} compartilham uma
 característica importante: ambos são sensíveis ao grau de ordenação
 da entrada, apresentando desempenho linear ($O(n)$) quando os dados já
-estão ordenados (entrada crescente) e desempenho quadrático ($O(n^2)$)
-nos casos médio e pior (entradas randômica e decrescente,
-respectivamente). Entre os dois, o Bubble Sort mostrou-se
-consistentemente mais lento que o Insertion Sort para os mesmos
-tamanhos e tipos de entrada, apesar de ambos terem a mesma ordem de
-grandeza de comparações no pior e no caso médio — diferença
-explicada pelo maior custo de cada troca do Bubble Sort (três
-atribuições) frente ao deslocamento único do Insertion Sort.
+estão ordenados (0,0006 s e 0,0003 s, respectivamente) e desempenho
+quadrático ($O(n^2)$) nos casos médio e pior (entradas randômica e
+decrescente). Entre os dois, o resultado depende do tipo de entrada:
+com a entrada decrescente os tempos foram equivalentes (167,0 s para o
+Insertion Sort e 155,6 s para o Bubble Sort), mas com a entrada
+randômica o Bubble Sort foi cerca de 11,6 vezes mais lento (938,7 s
+contra 80,6 s). Parte dessa diferença decorre do dobro de comparações do
+Bubble Sort em uma entrada aleatória ($n(n-1)/2$ contra $n(n-1)/4$) e,
+provavelmente, de efeitos de hardware que a contagem de operações não
+captura.
 
 \qquad O \textbf{Selection Sort} se destacou por um comportamento distinto:
 sua complexidade é $\Theta(n^2)$ em \textit{todos} os casos (melhor, médio e
 pior), já que o número de comparações não depende da ordem dos dados
-de entrada — apenas o número de trocas varia, mas essa quantidade é
-sempre $O(n)$ e, portanto, irrelevante diante das $O(n^2)$ comparações.
+--- só o de trocas varia, mas é sempre $O(n)$, irrelevante diante das
+$O(n^2)$ comparações.
 Isso foi confirmado experimentalmente: os tempos medidos para as
 entradas crescente, decrescente e randômica ficaram praticamente
-idênticos entre si, para um mesmo tamanho de instância.
+idênticos entre si (932,5 s a 937,3 s, uma variação de 0,5\%). Por não
+se beneficiar de entradas ordenadas, foi o mais lento na entrada
+crescente (934,9 s, contra 0,0006 s do Insertion Sort) e equivalente ao
+Bubble Sort na randômica. Sua vantagem
+é o número previsível e mínimo de trocas (no máximo $n-1$), útil quando
+a operação de escrita é cara.
 
-\qquad O \textbf{Shell Sort} apresentou, de longe, o melhor desempenho entre
-os quatro algoritmos, para todos os tipos de entrada testados, mesmo
-utilizando a sequência de intervalos mais simples (a original de
-Shell). Embora essa sequência tenha pior caso teórico $\Theta(n^2)$, esse
-pior caso exige uma disposição de dados especificamente construída
-para isso, o que não ocorre nem mesmo com uma entrada totalmente
-decrescente — por isso, tanto a entrada crescente quanto a
-decrescente exibiram comportamento próximo de O(n log n) nos testes
-realizados, enquanto a entrada randômica, embora sem uma fórmula
-fechada simples de caso médio, também se manteve ordens de grandeza
-mais rápida que os demais algoritmos para os mesmos tamanhos.
+\qquad O \textbf{Shell Sort} apresentou desempenho muito superior ao dos
+três algoritmos anteriores em todos os tipos de entrada testados
+(0,008 s, 0,012 s e 0,106 s para as entradas crescente, decrescente e
+randômica), mesmo utilizando a sequência de intervalos mais simples (a
+original de Shell). Embora essa sequência tenha pior caso teórico
+$\Theta(n^2)$, ele exige uma disposição de dados construída
+especificamente para isso, o que não ocorre nem com uma entrada
+totalmente decrescente --- por isso as entradas crescente e decrescente
+exibiram comportamento próximo de $O(n \log n)$, e a randômica (sem
+fórmula fechada simples de caso médio) foi cerca de 760 vezes mais
+rápida que o Insertion Sort.
 
-\qquad Em resumo, os experimentos evidenciam que, embora Insertion,
-Selection e Bubble Sort compartilhem a mesma complexidade assintótica
-de pior caso ($O(n^2)$), a escolha entre eles pode fazer diferença
-prática relevante dependendo do grau de ordenação esperado dos dados:
-o Insertion Sort é preferível quando há expectativa de entradas quase
-ordenadas, o Selection Sort tem a vantagem de um número previsível e
-mínimo de trocas (útil quando a operação de escrita é cara), e o
-Bubble Sort, apesar de didático, não apresenta vantagem prática clara
-sobre os demais nos cenários testados. O Shell Sort, por sua vez,
-demonstra como uma modificação relativamente simples do Insertion
-Sort (a introdução de saltos/gaps decrescentes) é suficiente para
-alcançar um ganho de desempenho expressivo, sendo a escolha mais
-adequada dentre os quatro para instâncias grandes, especialmente
-quando não é garantida nenhuma característica sobre a ordenação
-prévia dos dados.
+\qquad O \textbf{Merge Sort} tem complexidade $\Theta(n \log n)$ em todos os
+casos, independentemente da ordem inicial dos dados, e foi o único
+algoritmo cujo tempo não apresentou grande variação com o tipo de
+entrada: 0,021 s (crescente), 0,021 s (decrescente) e 0,078 s
+(randômica). Para a entrada randômica foi o mais rápido dos cinco
+(0,078 s, contra 0,106 s do Shell Sort e 80,6 s do Insertion Sort, o
+melhor dos três algoritmos quadráticos nesse cenário, ou seja, cerca de
+mil vezes mais rápido). Quando a entrada já é crescente ou decrescente,
+o Shell Sort foi mais rápido que o Merge Sort (0,008 s e 0,012 s contra
+0,021 s), e o Insertion e o Bubble Sort, lineares na entrada crescente,
+ainda mais. O preço do Merge Sort é a memória
+adicional proporcional ao tamanho da entrada (um vetor auxiliar de
+cerca de 4 MB para 1.000.000 de inteiros), enquanto os outros quatro
+algoritmos ordenam no próprio vetor.
+
+\qquad Em resumo, os experimentos evidenciam que a escolha do algoritmo
+importa mais do que qualquer ajuste de detalhe: para 1.000.000 de
+elementos randômicos, os algoritmos de menor complexidade (Merge e
+Shell Sort) levaram cerca de 0,1 s, contra 80 a 940 s dos três
+algoritmos $O(n^2)$ --- uma diferença de três a quatro ordens de
+grandeza. Entre os algoritmos $O(n^2)$, o Insertion Sort foi o mais
+regular: nunca foi o pior em nenhum cenário e foi, de longe, o melhor
+na entrada randômica, sendo preferível quando se espera entradas quase
+ordenadas; o Selection Sort tem a vantagem de um número mínimo de
+trocas, e o Bubble Sort, apesar de didático, não apresentou vantagem
+prática clara sobre os demais, a não ser na entrada crescente, onde
+foi o mais rápido por uma margem muito pequena. O Merge Sort é a escolha mais
+segura quando se precisa de desempenho garantido para qualquer
+entrada e há memória disponível; o Shell Sort, que mostra como uma
+modificação simples do Insertion Sort (intervalos decrescentes) produz
+um ganho expressivo, é uma boa alternativa quando a memória é restrita
+ou os dados tendem a estar parcialmente ordenados.
+
+\qquad Cada instância foi executada uma única vez, com instâncias
+aleatórias distintas por algoritmo, e medida com \texttt{clock()}, de
+resolução limitada; por isso, diferenças pequenas, como a de 7\% entre
+o Insertion e o Bubble Sort na entrada decrescente, não indicam
+superioridade de um algoritmo, ao contrário das diferenças de ordens
+de grandeza, que são robustas.
