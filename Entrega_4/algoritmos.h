@@ -3,8 +3,8 @@
 
 // ============================================================================
 // algoritmos.h
-// Contem: os cinco algoritmos de ordenacao (Insertion, Selection, Bubble,
-// Shell e Merge Sort), as funcoes de manipulacao de arquivos (entrada, saida
+// Contem: os sete algoritmos de ordenacao (Insertion, Selection, Bubble,
+// Shell, Merge Sort e as duas versoes do Quick Sort), as funcoes de manipulacao de arquivos (entrada, saida
 // e tempo) e a criacao automatica da estrutura de pastas exigida pelo
 // trabalho. As instancias (crescente/decrescente/random) ficam em
 // crescente.h, decrescente.h e random.h.
@@ -190,6 +190,156 @@ void MergeSort(int *vetor, int tamanho) {
     delete[] aux;
 }
 
+// Quick Sort (ordenacao por troca de particoes, "dividir para conquistar").
+// Escolhe um elemento do trecho como pivo, reorganiza o trecho de modo que os
+// menores fiquem a esquerda do pivo e os maiores a direita (particao) e
+// repete o processo, recursivamente, nos dois lados. Ao contrario do Merge
+// Sort, NAO existe fase de combinacao: a particao ja deixa o pivo na sua
+// posicao definitiva, e quando os dois lados estao ordenados o vetor inteiro
+// esta ordenado.
+//
+// Sao implementadas duas versoes, como pede o trabalho:
+//   Versao 1 - pivo = primeiro elemento do trecho (versao apresentada em aula);
+//   Versao 2 - pivo = media aritmetica dos elementos do trecho, para melhorar
+//              a escolha do pivo em entradas ja ordenadas.
+
+// Troca o conteudo de duas posicoes do vetor.
+void trocar(int *a, int *b) {
+    int aux = *a;
+    *a = *b;
+    *b = aux;
+}
+
+// --- Versao 1: pivo = primeiro elemento -----------------------------------
+
+// Particiona o trecho vetor[inicio..fim] usando como pivo o PRIMEIRO
+// elemento (vetor[inicio]). Percorre o trecho uma unica vez mantendo em "i"
+// a ultima posicao ocupada por um elemento menor ou igual ao pivo; ao final,
+// o pivo e levado para a posicao i, que e a sua posicao DEFINITIVA no vetor
+// ordenado. Retorna essa posicao.
+// Custo: exatamente m - 1 comparacoes para m = fim - inicio + 1 elementos,
+// ou seja, O(m) -- cada elemento e visitado uma unica vez.
+int ParticionaVersao1(int *vetor, int inicio, int fim) {
+    int pivo = vetor[inicio];   // pivo: primeiro elemento do trecho
+    int i = inicio;             // ultima posicao dos elementos <= pivo
+
+    for (int j = inicio + 1; j <= fim; j++) {
+        if (vetor[j] <= pivo) {
+            i++;
+            trocar(&vetor[i], &vetor[j]);
+        }
+    }
+
+    trocar(&vetor[inicio], &vetor[i]); // pivo vai para a sua posicao final
+    return i;
+}
+
+// Ordena o trecho vetor[inicio..fim] (extremos incluidos).
+//
+// Observacao importante sobre a recursao: no pior caso (entrada ja ordenada,
+// em que o pivo e sempre o menor ou o maior elemento) uma das particoes fica
+// vazia e a outra com m - 1 elementos, de modo que a recursao atingiria
+// profundidade n -- para n = 1.000.000 isso estoura a pilha do programa
+// (falha de segmentacao) antes de terminar. Por isso aplica-se aqui a
+// eliminacao da recursao de cauda: a chamada recursiva e feita sempre na
+// MENOR particao e a maior continua no proprio laco. As particoes, as
+// comparacoes e as trocas sao EXATAMENTE as mesmas do algoritmo classico
+// (a analise de complexidade nao muda), mas a pilha passa a ter no maximo
+// O(log n) niveis, o que permite executar tambem o pior caso com 1.000.000
+// de elementos.
+void QuickSortVersao1Recursivo(int *vetor, int inicio, int fim) {
+    while (inicio < fim) {
+        int p = ParticionaVersao1(vetor, inicio, fim); // pivo na posicao p
+
+        if (p - inicio < fim - p) {                    // lado esquerdo menor
+            QuickSortVersao1Recursivo(vetor, inicio, p - 1);
+            inicio = p + 1;                            // continua no direito
+        } else {                                       // lado direito menor
+            QuickSortVersao1Recursivo(vetor, p + 1, fim);
+            fim = p - 1;                               // continua no esquerdo
+        }
+    }
+}
+
+// Ponto de entrada da versao 1, com a mesma assinatura dos demais
+// algoritmos do trabalho (vetor e tamanho).
+void QuickSortVersao1(int *vetor, int tamanho) {
+    if (tamanho < 2) return;
+    QuickSortVersao1Recursivo(vetor, 0, tamanho - 1);
+}
+
+// --- Versao 2: pivo = media aritmetica do trecho --------------------------
+
+// Particiona o trecho vetor[inicio..fim] usando como pivo a MEDIA ARITMETICA
+// dos seus elementos. A media e um valor (nao necessariamente um elemento do
+// vetor) que fica sempre entre o menor e o maior elemento do trecho, o que
+// evita o pior caso da versao 1: em uma entrada ja ordenada (crescente ou
+// decrescente) a media cai no meio do trecho e as duas particoes ficam
+// equilibradas.
+//
+// A varredura e a de Hoare (dois indices que caminham um para o outro):
+// "i" anda para a direita enquanto encontra elementos menores que a media,
+// "j" anda para a esquerda enquanto encontra elementos maiores que a media, e
+// os dois elementos que travam a varredura sao trocados. Ao final, os indices
+// se cruzam e os trechos a ordenar sao vetor[inicio..j] e vetor[i..fim] --
+// por isso os dois indices sao devolvidos ao chamador.
+//
+// A soma e acumulada em "double" porque a soma de 1.000.000 de valores de
+// ate 10^9 passa do limite de um int (ate 2^53 o double representa inteiros
+// de forma exata, logo nao ha perda de precisao).
+//
+// Custo: a soma percorre os m elementos uma vez e a varredura os percorre
+// mais uma vez, ou seja, O(m) -- apenas o dobro do trabalho da versao 1,
+// o que nao altera a ordem de complexidade.
+void ParticionaVersao2(int *vetor, int inicio, int fim, int *i, int *j) {
+    double soma = 0.0;
+    for (int k = inicio; k <= fim; k++) {
+        soma += vetor[k];
+    }
+    int media = (int) (soma / (double) (fim - inicio + 1)); // pivo
+
+    *i = inicio;
+    *j = fim;
+
+    do {
+        // Os lacos nao precisam de teste de limite: como a media fica entre
+        // o menor e o maior elemento do trecho, existe sempre um elemento
+        // >= media para parar "i" e um elemento <= media para parar "j".
+        while (vetor[*i] < media) (*i)++;
+        while (vetor[*j] > media) (*j)--;
+
+        if (*i <= *j) {
+            trocar(&vetor[*i], &vetor[*j]);
+            (*i)++;
+            (*j)--;
+        }
+    } while (*i <= *j);
+}
+
+// Ordena o trecho vetor[inicio..fim]. Mesma eliminacao de recursao de cauda
+// da versao 1 (recursao na menor particao, laco na maior).
+void QuickSortVersao2Recursivo(int *vetor, int inicio, int fim) {
+    while (inicio < fim) {
+        int i, j;
+        ParticionaVersao2(vetor, inicio, fim, &i, &j);
+
+        // trechos que faltam ordenar: [inicio..j] e [i..fim]
+        if (j - inicio < fim - i) {                    // lado esquerdo menor
+            QuickSortVersao2Recursivo(vetor, inicio, j);
+            inicio = i;                                // continua no direito
+        } else {                                       // lado direito menor
+            QuickSortVersao2Recursivo(vetor, i, fim);
+            fim = j;                                   // continua no esquerdo
+        }
+    }
+}
+
+// Ponto de entrada da versao 2.
+void QuickSortVersao2(int *vetor, int tamanho) {
+    if (tamanho < 2) return;
+    QuickSortVersao2Recursivo(vetor, 0, tamanho - 1);
+}
+
 // ---------------------------------------------------------------------------
 // 2. Utilitarios de nomenclatura
 // ---------------------------------------------------------------------------
@@ -358,6 +508,69 @@ bool salvarTempo(const string &algoritmo, int tipo, int tamanho, double tempo) {
     fprintf(arq, "%d\n", tamanho);
     fprintf(arq, "%f\n", tempo);
     return fecharArquivo(arq, nomeArquivo);
+}
+
+// ---------------------------------------------------------------------------
+// 5. Leitura da instancia a partir do arquivo (modo "em arquivo")
+// ---------------------------------------------------------------------------
+
+// Le a instancia gravada no arquivo de entrada correspondente, usada pelo
+// modo "em arquivo" do menu: em vez de gerar os numeros na memoria, o
+// programa carrega para o vetor os numeros que estao no arquivo de entrada
+// ja gravado em disco, ordena esse vetor e grava os arquivos de saida e de
+// tempo.
+//
+// Formato lido (o mesmo que o programa grava): primeira linha com o tamanho
+// da instancia e, em seguida, um valor por linha.
+//
+// Retorna um vetor alocado com new[] (o chamador libera com delete[]) e
+// escreve em *tamanhoLido quantos valores foram lidos. Retorna NULL se o
+// arquivo nao existir ou estiver incompleto.
+int* lerEntrada(const string &algoritmo, int tipo, int tamanho, int *tamanhoLido) {
+    string categoria = nomeCategoria(tipo);
+    string nomeArquivo = algoritmo + "/Arquivos de Entrada/" + categoria + "/Entrada" +
+                          categoria + inteiroParaTexto(tamanho) + ".txt";
+
+    FILE *arq = fopen(nomeArquivo.c_str(), "r");
+    if (arq == NULL) {
+        printf("ERRO: nao foi possivel abrir o arquivo de entrada \"%s\" (%s).\n",
+               nomeArquivo.c_str(), strerror(errno));
+        return NULL;
+    }
+
+    int quantidade = 0;
+    if (fscanf(arq, "%d", &quantidade) != 1 || quantidade <= 0) {
+        printf("ERRO: o arquivo \"%s\" nao comeca com o tamanho da instancia.\n", nomeArquivo.c_str());
+        fclose(arq);
+        return NULL;
+    }
+
+    int *vetor = new int[quantidade];
+    for (int i = 0; i < quantidade; i++) {
+        if (fscanf(arq, "%d", &vetor[i]) != 1) {
+            printf("ERRO: o arquivo \"%s\" tem menos valores (%d) do que o tamanho informado (%d).\n",
+                   nomeArquivo.c_str(), i, quantidade);
+            delete[] vetor;
+            fclose(arq);
+            return NULL;
+        }
+    }
+    fclose(arq);
+
+    *tamanhoLido = quantidade;
+    return vetor;
+}
+
+// Informa se o arquivo de entrada daquela instancia ja existe em disco.
+bool existeEntrada(const string &algoritmo, int tipo, int tamanho) {
+    string categoria = nomeCategoria(tipo);
+    string nomeArquivo = algoritmo + "/Arquivos de Entrada/" + categoria + "/Entrada" +
+                          categoria + inteiroParaTexto(tamanho) + ".txt";
+
+    FILE *arq = fopen(nomeArquivo.c_str(), "r");
+    if (arq == NULL) return false;
+    fclose(arq);
+    return true;
 }
 
 #endif
