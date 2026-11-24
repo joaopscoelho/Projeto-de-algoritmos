@@ -6,20 +6,28 @@ desenvolvidos ao longo dos anos, cada um com características
 próprias de desempenho, simplicidade de implementação e
 comportamento em diferentes cenários de entrada.
 
-\qquad Este trabalho é dividido em cinco capítulos, um para cada
+\qquad Este trabalho é dividido em seis capítulos, um para cada
 algoritmo de ordenação estudado: o Capítulo 1 trata do Insertion
 Sort, o Capítulo 2 do Selection Sort, o Capítulo 3 do Bubble Sort, o
-Capítulo 4 do Shell Sort e o Capítulo 5 do Merge Sort. Os quatro
-primeiros são algoritmos de ordenação por comparação amplamente
-utilizados como introdução ao estudo de algoritmos e possuem
-complexidade $O(n^2)$ no pior caso (no caso do Shell Sort, com a
-sequência de intervalos original utilizada neste trabalho, e apenas
-para entradas construídas especificamente para isso) --- ainda que,
-dependendo dos dados de entrada, alguns deles possam ser bem mais
-rápidos do que essa cota sugere. O Merge Sort, por sua vez, baseia-se
-no paradigma de dividir para conquistar e tem complexidade
-$\Theta(n \log n)$ em todos os casos, ao custo de utilizar memória
-adicional proporcional ao tamanho da entrada.
+Capítulo 4 do Shell Sort, o Capítulo 5 do Merge Sort e o Capítulo 6 do
+Quick Sort. Os quatro primeiros são algoritmos de ordenação por
+comparação amplamente utilizados como introdução ao estudo de
+algoritmos e possuem complexidade $O(n^2)$ no pior caso (no caso do
+Shell Sort, com a sequência de intervalos original utilizada neste
+trabalho, e apenas para entradas construídas especificamente para
+isso) --- ainda que, dependendo dos dados de entrada, alguns deles
+possam ser bem mais rápidos do que essa cota sugere. O Merge Sort, por
+sua vez, baseia-se no paradigma de dividir para conquistar e tem
+complexidade $\Theta(n \log n)$ em todos os casos, ao custo de
+utilizar memória adicional proporcional ao tamanho da entrada. O Quick
+Sort também usa o paradigma de dividir para conquistar, mas sem fase de
+combinação e sem memória adicional: em troca, a sua complexidade
+depende da qualidade da escolha do pivô, sendo $\Theta(n \log n)$ no
+melhor caso e no caso médio, e $\Theta(n^2)$ no pior caso. Por isso,
+no Capítulo 6, são implementadas e comparadas duas versões do Quick
+Sort, que se diferenciam apenas na escolha do pivô: a versão 1 usa o
+primeiro elemento do trecho e a versão 2 usa a média aritmética dos
+seus elementos.
 
 \qquad Ao longo de cada capítulo são apresentados o funcionamento do
 respectivo algoritmo, um teste de mesa manual, a análise de
@@ -27,6 +35,11 @@ complexidade nas diferentes situações de entrada, e os resultados
 experimentais obtidos a partir de uma implementação em C++, testada
 com instâncias de tamanhos crescentes (de 10 a 1.000.000 de
 elementos) e três padrões de entrada: crescente, decrescente e
-randômica. Ao final do trabalho, os cinco algoritmos são comparados
+randômica. Em seguida, uma seção específica responde às questões
+propostas no enunciado desta etapa do trabalho, entre elas a prova da
+análise de complexidade do Insertion Sort no pior caso, a
+justificativa do tempo linear do procedimento de partição do Quick
+Sort e a discussão sobre a ausência de fase de combinação nesse
+algoritmo. Ao final do trabalho, os sete algoritmos são comparados
 entre si por meio de uma tabela e um gráfico geral, seguidos de uma
 conclusão consolidada sobre os resultados observados.

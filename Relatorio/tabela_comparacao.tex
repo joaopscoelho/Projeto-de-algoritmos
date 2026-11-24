@@ -1,6 +1,6 @@
 \qquad As Tabelas \ref{tab:comparacao_crescente}, \ref{tab:comparacao_decrescente}
 e \ref{tab:comparacao_random} apresentam, lado a lado, os tempos de
-execução (em segundos) obtidos pelos cinco algoritmos estudados neste
+execução (em segundos) obtidos pelos sete algoritmos estudados neste
 trabalho, para os seis tamanhos de instância exigidos, uma tabela para
 cada um dos três tipos de entrada testados (Crescente, Decrescente e
 Random). Todos os valores são os registrados nos arquivos de tempo
@@ -12,15 +12,46 @@ gerados pelo programa para cada algoritmo.
 
 \input{Tabelas/comparacao_random}
 
-\qquad Para 1.000.000 de elementos, os destaques de cada tabela são:
-na entrada crescente, o Bubble Sort (0,000321 s) e o Insertion Sort
-(0,000584 s) foram os mais rápidos, por serem lineares nesse cenário,
-seguidos pelo Shell Sort (0,008251 s) e pelo Merge Sort (0,021293 s),
-enquanto o Selection Sort levou 934,9 s; na entrada decrescente, o Shell
-Sort (0,011790 s) e o Merge Sort (0,020753 s) ficaram quatro ordens de
-grandeza abaixo dos algoritmos quadráticos, entre os quais Bubble Sort
-(155,6 s) e Insertion Sort (167,0 s) tiveram desempenho equivalente e o
-Selection Sort foi o mais lento (937,3 s); na entrada randômica, o
-Merge Sort foi o mais rápido (0,077718 s), seguido pelo Shell Sort
-(0,106033 s), muito à frente do Insertion Sort (80,6 s), do Selection
-Sort (932,5 s) e do Bubble Sort (938,7 s).
+\qquad \textbf{Observação sobre o ambiente de medição.} Os tempos dos
+cinco primeiros algoritmos foram medidos no computador pessoal do
+autor, e os das duas versões do Quick Sort, em um ambiente de
+computação em nuvem, porque o pior caso da versão 1 com 1.000.000 de
+elementos exige vários minutos de processamento contínuo. Para
+quantificar a diferença, o Shell Sort e o Merge Sort foram
+reexecutados no mesmo ambiente de nuvem, com 1.000.000 de elementos em
+ordem randômica: o Shell Sort levou 0,136953 s (1,29 vez o tempo
+medido no computador pessoal) e o Merge Sort, 0,092810 s (1,74 vez).
+Portanto, diferenças menores que cerca de duas vezes entre as linhas
+do Quick Sort e as dos demais algoritmos não devem ser interpretadas
+como superioridade de um deles; já as diferenças de ordens de
+grandeza, que são as relevantes neste trabalho, permanecem válidas.
+
+\qquad Para 1.000.000 de elementos, os destaques de cada tabela são os
+seguintes. Na \textbf{entrada crescente}, o Bubble Sort (0,000321 s) e
+o Insertion Sort (0,000584 s) foram os mais rápidos, por serem
+lineares nesse cenário, seguidos pelo Shell Sort (0,008251 s), pelo
+Quick Sort versão 2 (0,021151 s) e pelo Merge Sort (0,029037 s),
+enquanto o Quick Sort versão 1 levou 154,2 s --- é o seu pior caso ---
+e o Selection Sort, 934,9 s.
+
+\qquad Na \textbf{entrada decrescente}, o Shell Sort (0,011790 s), o
+Quick Sort versão 2 (0,022560 s) e o Merge Sort (0,029229 s) ficaram
+quatro ordens de grandeza abaixo dos demais. Entre os algoritmos que
+se comportam de forma quadrática nesse cenário, o Bubble Sort
+(155,6 s) e o Insertion Sort (167,0 s) tiveram desempenho equivalente,
+o Quick Sort versão 1 foi mais lento que os dois (229,4 s) e o
+Selection Sort foi o mais lento de todos (937,3 s).
+
+\qquad Na \textbf{entrada randômica}, a ordem se inverte: o Merge Sort
+(0,053426 s) e o Quick Sort versão 1 (0,063731 s) foram os mais
+rápidos --- e a diferença entre os dois está dentro da incerteza de
+ambiente discutida acima, de modo que não se pode afirmar qual deles é
+superior nesse cenário ---, seguidos pelo Shell Sort (0,106033 s) e
+pelo Quick Sort versão 2 (0,114290 s), muito à frente do Insertion
+Sort (80,6 s), do Selection Sort (932,5 s) e do Bubble Sort
+(938,7 s). Vale notar que o Quick Sort versão 1 passa de 229,4 s na
+entrada decrescente para 0,063731 s na randômica, uma diferença de
+3.600 vezes para o mesmo algoritmo e o mesmo tamanho de entrada: é a
+demonstração mais clara, em todo o trabalho, de que a complexidade de
+um algoritmo pode depender inteiramente da disposição inicial dos
+dados.

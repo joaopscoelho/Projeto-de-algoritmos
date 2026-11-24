@@ -1,0 +1,284 @@
+\label{sec:resultados}
+
+\qquad Esta seção responde, uma a uma, às questões apresentadas no
+enunciado do trabalho. Conforme permitido pelo enunciado, o
+``Algoritmo 1'' escolhido entre os algoritmos já estudados foi o
+\textbf{Insertion Sort}, tratado no Capítulo 1 deste relatório.
+
+\subsection{Primeiro resultado: prova da análise de complexidade do Insertion Sort para o pior caso}
+
+\qquad O Insertion Sort implementado neste trabalho é o seguinte, com
+as linhas numeradas e uma constante de custo $c_i$ associada a cada
+uma delas:
+
+\begin{verbatim}
+void InsertionSort(int *vetor, int tamanho) {
+    int chave, j;
+1   for (int i = 1; i < tamanho; i++) {
+2       chave = vetor[i];
+3       j = i - 1;
+4       while (j >= 0 && vetor[j] > chave) {
+5           vetor[j + 1] = vetor[j];
+6           j--;
+        }
+7       vetor[j + 1] = chave;
+    }
+}
+\end{verbatim}
+
+\qquad Seja $n$ o tamanho do vetor e seja $t_i$ o número de vezes que o
+teste do laço \texttt{while} (linha 4) é executado para um
+determinado valor de $i$. O número de execuções de cada linha é:
+
+\begin{center}
+\begin{tabular}{|c|l|c|c|}
+    \hline
+    Linha & Instrução & Custo & Execuções \\
+    \hline
+    1 & \texttt{for (i = 1; i < tamanho; i++)} & $c_1$ & $n$ \\
+    \hline
+    2 & \texttt{chave = vetor[i];} & $c_2$ & $n-1$ \\
+    \hline
+    3 & \texttt{j = i - 1;} & $c_3$ & $n-1$ \\
+    \hline
+    4 & \texttt{while (j >= 0 \&\& vetor[j] > chave)} & $c_4$ & $\sum_{i=1}^{n-1} t_i$ \\
+    \hline
+    5 & \texttt{vetor[j + 1] = vetor[j];} & $c_5$ & $\sum_{i=1}^{n-1} (t_i - 1)$ \\
+    \hline
+    6 & \texttt{j--;} & $c_6$ & $\sum_{i=1}^{n-1} (t_i - 1)$ \\
+    \hline
+    7 & \texttt{vetor[j + 1] = chave;} & $c_7$ & $n-1$ \\
+    \hline
+\end{tabular}
+\end{center}
+
+\qquad Somando o custo de todas as linhas:
+\begin{equation}
+T(n) = c_1 n + (c_2+c_3+c_7)(n-1) + c_4\sum_{i=1}^{n-1} t_i
+        + (c_5+c_6)\sum_{i=1}^{n-1} (t_i - 1).
+\label{eq:insertion_geral}
+\end{equation}
+
+\qquad \textbf{Cota superior para $t_i$.} Para um dado $i$, o índice $j$
+começa em $i-1$ e é decrementado a cada iteração, e o laço para quando
+$j < 0$ (ou antes, se encontrar um elemento menor ou igual à chave).
+Logo o teste da linha 4 é executado, no máximo, $i+1$ vezes
+($i$ testes verdadeiros, para $j = i-1, i-2, \ldots, 0$, mais um teste
+final falso), ou seja,
+\begin{equation}
+t_i \le i+1 \qquad \text{para todo } i,
+\label{eq:cota_ti}
+\end{equation}
+qualquer que seja a entrada. Como $c_4$, $c_5$ e $c_6$ são positivos,
+substituir $t_i$ pelo seu valor máximo em (\ref{eq:insertion_geral})
+dá uma cota superior para $T(n)$ sobre \textit{todas} as entradas de
+tamanho $n$ --- isto é, o pior caso.
+
+\qquad \textbf{A entrada decrescente atinge essa cota.} Se o vetor está
+em ordem estritamente decrescente, então, na iteração $i$, a chave
+\texttt{vetor[i]} é menor que todos os $i$ elementos já ordenados à sua
+esquerda; a condição \texttt{vetor[j] > chave} é verdadeira para
+$j = i-1, i-2, \ldots, 0$ e o laço só termina quando $j = -1$ torna
+falsa a condição \texttt{j >= 0}. Portanto $t_i = i+1$ exatamente,
+para todo $i$, e a entrada decrescente é o pior caso do algoritmo.
+
+\qquad \textbf{Resolução dos somatórios.} Com $t_i = i+1$:
+\begin{equation}
+\sum_{i=1}^{n-1} t_i = \sum_{i=1}^{n-1} (i+1)
+ = \frac{n(n-1)}{2} + (n-1) = \frac{n^2+n-2}{2},
+\end{equation}
+\begin{equation}
+\sum_{i=1}^{n-1} (t_i - 1) = \sum_{i=1}^{n-1} i = \frac{n(n-1)}{2}
+ = \frac{n^2-n}{2}.
+\end{equation}
+
+\qquad \textbf{Custo total no pior caso.} Substituindo em
+(\ref{eq:insertion_geral}):
+\begin{align}
+T(n) &= c_1 n + (c_2+c_3+c_7)(n-1)
+        + c_4\,\frac{n^2+n-2}{2} + (c_5+c_6)\,\frac{n^2-n}{2} \nonumber \\[4pt]
+     &= \underbrace{\left(\frac{c_4+c_5+c_6}{2}\right)}_{a} n^2
+      + \underbrace{\left(c_1+c_2+c_3+c_7+\frac{c_4-c_5-c_6}{2}\right)}_{b} n
+      \underbrace{-\,(c_2+c_3+c_7+c_4)}_{c}.
+\label{eq:insertion_pior}
+\end{align}
+
+\qquad \textbf{Conclusão.} O pior caso tem a forma
+$T(n) = a n^2 + b n + c$, com
+$a = (c_4+c_5+c_6)/2 > 0$, pois os custos $c_i$ são constantes
+positivas. Para provar que $T(n) = \Theta(n^2)$ basta exibir as
+constantes da definição. Para todo $n \ge 1$ vale
+$T(n) \le (a + |b| + |c|)\,n^2$, pois $n \le n^2$ e $1 \le n^2$, o que
+dá $T(n) = O(n^2)$ com $c_2' = a+|b|+|c|$. E, tomando
+$n_0 = \max\{1,\; 2(|b|+|c|)/a\}$, para todo $n \ge n_0$ vale
+$|b|n + |c| \le (|b|+|c|)\,n \le \tfrac{a}{2}n^2$, logo
+$T(n) \ge a n^2 - \tfrac{a}{2} n^2 = \tfrac{a}{2} n^2$, o que dá
+$T(n) = \Omega(n^2)$ com $c_1' = a/2$. Das duas cotas segue
+$T(n) = \Theta(n^2)$, como se queria provar.
+
+\qquad Em termos de operações elementares, o pior caso realiza
+exatamente $n(n-1)/2$ deslocamentos de elementos --- número igual ao
+total de pares fora de ordem (inversões) de um vetor decrescente, o que
+confirma o resultado por outro caminho, já que o Insertion Sort
+desloca um elemento exatamente uma vez por inversão. A análise
+manuscrita correspondente está na Figura
+\ref{fig:analise_complexidade}, no Capítulo 1, e os tempos medidos
+confirmam a previsão: para a entrada decrescente, ao multiplicar o
+tamanho da entrada por 10 (de 100.000 para 1.000.000 de elementos), o
+tempo passou de 1,620129 s para 166,979744 s, isto é, foi multiplicado
+por 103,1 --- praticamente o fator 100 esperado de um algoritmo
+quadrático.
+
+\subsection{Segundo resultado: por que o procedimento de partição do Quick Sort tem tempo linear $O(n)$}
+
+\qquad O procedimento de partição tem tempo linear porque
+\textbf{cada elemento do trecho é examinado exatamente uma vez}, com
+um número constante de operações por elemento, e nenhum índice
+retrocede.
+
+\qquad Na \textbf{versão 1}, o índice $j$ do laço \texttt{for} começa em
+$inicio+1$ e é incrementado de um em um até passar de $fim$, sem
+nunca voltar. Para um trecho de $m = fim - inicio + 1$ elementos, o
+corpo do laço é executado exatamente $m-1$ vezes, e cada execução
+realiza uma comparação (\texttt{vetor[j] <= pivo}) e, no máximo, um
+incremento de $i$ e uma troca --- todas operações de custo constante.
+Fora do laço há apenas a leitura do pivô, uma troca final e o
+\texttt{return}, também de custo constante. Somando, como mostrado na
+análise de complexidade deste capítulo,
+\[
+T_P(m) = c_2\,m + c_3\,(m-1) + c_4\,k + (c_1+c_5+c_6),
+\qquad 0 \le k \le m-1,
+\]
+onde $k$ é o número de elementos menores ou iguais ao pivô. Como $k$
+está limitado por $m-1$, tanto a cota inferior como a cota superior de
+$T_P(m)$ são funções lineares em $m$, e portanto
+$T_P(m) = \Theta(m) = O(m)$. São exatamente $m-1$ comparações e, no
+máximo, $m$ trocas, \textit{independentemente da ordem dos dados}.
+
+\qquad Na \textbf{versão 2} vale o mesmo argumento: o índice $i$ só
+aumenta, o índice $j$ só diminui, e o laço termina quando eles se
+cruzam --- logo os dois, juntos, percorrem cada posição do trecho uma
+única vez. O cálculo da média acrescenta uma segunda passada
+($m$ somas), de modo que o custo é $2m$ visitas mais um termo
+constante: ainda $\Theta(m)$, apenas com uma constante maior.
+
+\qquad É importante notar que \textbf{é a partição, e não a recursão,
+que é linear}. A complexidade total do Quick Sort é o custo linear da
+partição multiplicado pelo número de níveis da árvore de recursão: se
+as partições são equilibradas, há $\log_2 n$ níveis e o total é
+$\Theta(n \log n)$; se são desequilibradas ao extremo, há $n$ níveis e
+o total é $\Theta(n^2)$. O custo linear da partição é, portanto, a
+razão pela qual o melhor caso do Quick Sort é $n \log n$, e não melhor
+que isso.
+
+\subsection{Terceiro resultado: complexidade do Quick Sort no melhor, médio e pior caso}
+
+\qquad A análise completa, com o custo de cada instrução, o número de
+execuções e os respectivos cálculos, está na seção de análise de
+complexidade deste capítulo (Figura
+\ref{fig:analise_complexidade_quick}, manuscrita, e o resumo digitado
+que a acompanha). A recorrência do algoritmo é
+\[
+T(n) = T(k) + T(n-1-k) + \Theta(n),
+\]
+onde $k$ é o tamanho da partição esquerda, e os três casos
+correspondem a três comportamentos de $k$:
+
+\begin{center}
+\begin{tabular}{|l|l|l|c|}
+    \hline
+    Caso & Partição & Recorrência & Complexidade \\
+    \hline
+    Melhor & $k = \lfloor (n-1)/2 \rfloor$ & $T(n) = 2T(n/2) + \Theta(n)$ & $\Theta(n \log n)$ \\
+    \hline
+    Médio & $k$ uniforme em $[0, n-1]$ & $T(n) \approx 2(n+1)H_n - 4n$ & $\Theta(n \log n)$ \\
+    \hline
+    Pior & $k = 0$ ou $k = n-1$ & $T(n) = T(n-1) + \Theta(n)$ & $\Theta(n^2)$ \\
+    \hline
+\end{tabular}
+\end{center}
+
+\qquad No \textbf{melhor caso} o pivô é a mediana do trecho, as duas
+partições ficam do mesmo tamanho, a árvore de recursão tem
+$\log_2 n$ níveis e cada nível custa $\Theta(n)$; pelo caso 2 do
+Teorema Mestre (CORMEN et al., 2009), com $a = 2$, $b = 2$ e
+$f(n) = \Theta(n)$, resulta $\Theta(n \log n)$, com cerca de
+$n\log_2 n$ comparações.
+
+\qquad No \textbf{caso médio}, supondo que o pivô tenha a mesma
+probabilidade de terminar em qualquer das $n$ posições, a solução da
+recorrência é $T(n) \approx 2(n+1)H_n - 4n \approx 1{,}386\,n\log_2 n$,
+isto é, $\Theta(n \log n)$: apenas cerca de 39\% acima do melhor caso.
+
+\qquad No \textbf{pior caso} uma das partições fica vazia, a recursão
+degenera em uma cadeia de $n$ níveis e o número de comparações é
+exatamente
+$\sum_{m=2}^{n}(m-1) = n(n-1)/2$, logo $\Theta(n^2)$. Para a
+\textbf{versão 1} esse pior caso ocorre nas entradas \textbf{crescente
+e decrescente}, porque o primeiro elemento --- usado como pivô --- é
+sempre o menor ou o maior do trecho. Para a \textbf{versão 2}, a média
+está sempre entre o menor e o maior elemento e, nas entradas
+ordenadas, cai no meio do trecho: as entradas crescente e decrescente
+passam a ser o \textit{melhor} caso. Os tempos medidos confirmam os
+dois comportamentos, como mostram as tabelas e os gráficos deste
+capítulo.
+
+\subsection{Quarto resultado: o Quick Sort tem ou não a fase de combinação?}
+
+\qquad \textbf{Não tem.} O Quick Sort é um algoritmo de dividir para
+conquistar cuja fase de combinação é vazia: depois que as duas
+partições estão ordenadas, não resta nenhum trabalho a fazer.
+
+\qquad A razão está no que a partição garante. Ao terminar, o pivô
+está na posição $p$ e valem duas propriedades: (i) todo elemento em
+$vetor[inicio..p-1]$ é menor ou igual ao pivô e todo elemento em
+$vetor[p+1..fim]$ é maior ou igual a ele; (ii) a posição $p$ é a
+posição \textbf{definitiva} do pivô no vetor ordenado, pois há
+exatamente $p - inicio$ elementos menores ou iguais a ele à sua
+esquerda. Como todo elemento da esquerda é menor ou igual a todo
+elemento da direita, ordenar os dois lados separadamente, cada um no
+seu próprio trecho do vetor, já deixa o vetor inteiro ordenado. Não há
+nada a intercalar, copiar ou juntar.
+
+\qquad O contraste com o Merge Sort (Capítulo 5) deixa isso claro. Os
+dois algoritmos dividem o problema em dois subproblemas, mas
+distribuem o trabalho de formas opostas:
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+    \hline
+     & Merge Sort & Quick Sort \\
+    \hline
+    Dividir & trivial: calcular o meio, $\Theta(1)$ & partição, $\Theta(n)$ \\
+    \hline
+    Conquistar & duas metades iguais & dois trechos de tamanho variável \\
+    \hline
+    Combinar & intercalação, $\Theta(n)$ & \textbf{vazia}, $\Theta(1)$ \\
+    \hline
+    Memória extra & $\Theta(n)$ (vetor auxiliar) & $\Theta(1)$ (ordena no lugar) \\
+    \hline
+\end{tabular}
+\end{center}
+
+\qquad No Merge Sort a divisão é trivial e todo o trabalho está na
+combinação; no Quick Sort todo o trabalho está na divisão e a
+combinação desaparece. É justamente por não ter fase de combinação
+que o Quick Sort não precisa de vetor auxiliar e ordena \textit{in
+place}, usando apenas a pilha de recursão --- a sua principal vantagem
+prática sobre o Merge Sort. Em troca, como a divisão depende dos
+dados, o Quick Sort perde a garantia de $\Theta(n \log n)$ que o Merge
+Sort tem em todos os casos.
+
+\subsection{Quinto, sexto e sétimo resultados}
+
+\qquad O \textbf{quinto resultado} (tabela de comparação de todos os
+algoritmos, com os tempos de todas as instâncias) é apresentado na
+seção \textsc{Tabela de Comparação}; o \textbf{sexto resultado}
+(um gráfico para cada algoritmo, com as curvas das entradas já
+ordenada e decrescente) é apresentado na seção \textsc{Tabela e
+Gráfico} de cada capítulo --- em particular, para as duas versões do
+Quick Sort, nos Gráficos \ref{fig:grafico_quick_v1} a
+\ref{fig:grafico_quick_v2_log} --- e no gráfico geral da seção
+\textsc{Gráfico Geral}; e o \textbf{sétimo resultado} (conclusão sobre
+os métodos de ordenação, utilizando os conceitos de complexidade) é
+apresentado na seção \textsc{Conclusão}.

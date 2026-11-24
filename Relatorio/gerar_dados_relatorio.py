@@ -6,7 +6,7 @@ ARQUIVOS DE TEMPO da entrega, para que o relatorio sempre bata com os
 arquivos que o professor vai abrir.
 
 Uso (de dentro da pasta Relatorio/):
-    python3 gerar_dados_relatorio.py                 # usa ../Entrega_3
+    python3 gerar_dados_relatorio.py                 # usa ../Entrega_4
     python3 gerar_dados_relatorio.py ../Entrega_2    # outra entrega
 
 Requer: Python 3 e matplotlib.
@@ -30,7 +30,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
-ENTREGA = os.path.abspath(sys.argv[1]) if len(sys.argv) > 1 else os.path.join(AQUI, "..", "Entrega_3")
+ENTREGA = os.path.abspath(sys.argv[1]) if len(sys.argv) > 1 else os.path.join(AQUI, "..", "Entrega_4")
 
 TAMANHOS = [10, 100, 1000, 10000, 100000, 1000000]
 TIPOS = ["Crescente", "Decrescente", "Random"]
@@ -42,7 +42,20 @@ ALGORITMOS = [
     ("Bubble Sort", "bubble_sort", "bubble", "tab:red"),
     ("Shell Sort", "shell_sort", "shell", "tab:orange"),
     ("Merge Sort", "merge_sort", "merge", "tab:purple"),
+    ("Quick Sort Versao 1", "quick_sort_v1", "quick_v1", "tab:brown"),
+    ("Quick Sort Versao 2", "quick_sort_v2", "quick_v2", "tab:cyan"),
 ]
+
+# Nome usado nas tabelas, legendas e titulos. A pasta do algoritmo nao leva
+# acento para o codigo C++ gravar os arquivos em qualquer sistema.
+NOMES = {
+    "Quick Sort Versao 1": "Quick Sort versão 1",
+    "Quick Sort Versao 2": "Quick Sort versão 2",
+}
+
+
+def nome_exibicao(pasta):
+    return NOMES.get(pasta, pasta)
 COR_TIPO = {"Crescente": "tab:blue", "Decrescente": "tab:red", "Random": "tab:orange"}
 
 
@@ -100,7 +113,7 @@ def gerar_tabelas_individuais(dados):
         for tipo in TIPOS:
             t += "        %s & %s \\\\\n        \\hline\n" % (tipo, " & ".join(virgula(dados[pasta][tipo][n]) for n in TAMANHOS))
         t += "    \\end{tabular}\n"
-        t += "    \\caption{Tempo de execução (em segundos) do %s por tamanho e tipo de instância}\n" % pasta
+        t += "    \\caption{Tempo de execução (em segundos) do %s por tamanho e tipo de instância}\n" % nome_exibicao(pasta)
         t += "    \\label{tab:tempos_%s}\n\\end{table}\n" % rotulo
         escrever(os.path.join(AQUI, "Tabelas", "tab_%s.tex" % slug), t)
 
@@ -110,7 +123,7 @@ def gerar_tabelas_comparacao(dados):
         t = "\\begin{table}[htbp]\n    \\centering\n    \\begin{tabular}{|l|r|r|r|r|r|r|}\n"
         t += cabecalho_tabela()
         for pasta, _, _, _ in ALGORITMOS:
-            t += "        %s & %s \\\\\n        \\hline\n" % (pasta, " & ".join(virgula(dados[pasta][tipo][n]) for n in TAMANHOS))
+            t += "        %s & %s \\\\\n        \\hline\n" % (nome_exibicao(pasta), " & ".join(virgula(dados[pasta][tipo][n]) for n in TAMANHOS))
         t += "    \\end{tabular}\n"
         t += "    \\caption{Tempo de execução (em segundos) dos %d algoritmos -- entrada %s}\n" % (len(ALGORITMOS), tipo)
         t += "    \\label{tab:comparacao_%s}\n\\end{table}\n" % tipo.lower()
@@ -142,7 +155,7 @@ def gerar_graficos_individuais(dados):
             fig, ax = plt.subplots(figsize=(8, 5))
             for tipo in TIPOS:
                 ax.plot(TAMANHOS, valores(dados[pasta][tipo], log), marker="o", color=COR_TIPO[tipo], label=tipo)
-            estilo(ax, "Gráfico do %s" % pasta, log)
+            estilo(ax, "Gráfico do %s" % nome_exibicao(pasta), log)
             fig.tight_layout()
             saida = os.path.join(AQUI, "Imagens", pasta, "grafico_log.png" if log else "grafico.png")
             os.makedirs(os.path.dirname(saida), exist_ok=True)
@@ -155,7 +168,7 @@ def gerar_graficos_gerais(dados):
         for log in (False, True):
             fig, ax = plt.subplots(figsize=(8, 5))
             for pasta, _, _, cor in ALGORITMOS:
-                ax.plot(TAMANHOS, valores(dados[pasta][tipo], log), marker="o", color=cor, label=pasta)
+                ax.plot(TAMANHOS, valores(dados[pasta][tipo], log), marker="o", color=cor, label=nome_exibicao(pasta))
             estilo(ax, "Gráfico Geral -- entrada %s" % tipo, log)
             fig.tight_layout()
             nome = "grafico_geral_%s%s.png" % (tipo.lower(), "_log" if log else "")
